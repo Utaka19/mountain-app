@@ -32,6 +32,10 @@ export default function Index() {
     setHeight("");
   };
 
+  const deleteMountain = (id: string) => {
+    setMountains((prev) => prev.filter((item) => item.id !== id));
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#121212", padding: 20 }}>
       <TextInput
@@ -65,6 +69,8 @@ export default function Index() {
             <Text style={{ color: "white" }}>
               {Number(item.height).toFixed(0)} m
             </Text>
+
+            <Button title="削除" onPress={() => deleteMountain(item.id)} />
           </View>
         )}
       />
