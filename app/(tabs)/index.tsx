@@ -1,4 +1,5 @@
-import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import { Button, FlatList, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -13,6 +14,7 @@ export default function Index() {
   const [name, setName] = useState("");
   const [height, setHeight] = useState("");
   const [mountains, setMountains] = useState<Mountain[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const addMountain = () => {
     if (!name) return;
@@ -35,6 +37,33 @@ export default function Index() {
   const deleteMountain = (id: string) => {
     setMountains((prev) => prev.filter((item) => item.id !== id));
   };
+
+  useEffect(() => {
+    const load = async () => {
+      const data = await AsyncStorage.getItem("mountains");
+
+      console.log("ロード:", data);
+
+      if (data !== null) {
+        setMountains(JSON.parse(data));
+      }
+
+      setIsLoaded(true);
+    };
+
+    load();
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    console.log("保存:", mountains);
+    const save = async () => {
+      await AsyncStorage.setItem("mountains", JSON.stringify(mountains));
+    };
+
+    save();
+  }, [mountains, isLoaded]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#121212", padding: 20 }}>
