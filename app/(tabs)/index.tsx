@@ -15,6 +15,10 @@ export default function Index() {
   const [height, setHeight] = useState("");
   const [mountains, setMountains] = useState<Mountain[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const totalHeight = mountains.reduce(
+    (sum, item) => sum + Number(item.height),
+    0,
+  );
 
   const addMountain = () => {
     if (!name) return;
@@ -67,6 +71,22 @@ export default function Index() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#121212", padding: 20 }}>
+      <Text
+        style={{
+          color: "white",
+          fontSize: 26,
+          fontWeight: "bold",
+          marginBottom: 20,
+          textAlign: "center",
+        }}
+      >
+        🏔 登山記録アプリ
+      </Text>
+
+      <Text style={{ color: "white", marginBottom: 10 }}>
+        合計標高: {totalHeight.toFixed(0)} m
+      </Text>
+
       <TextInput
         placeholder="山の名前"
         value={name}
