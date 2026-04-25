@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, TextInput } from "react-native";
+import { Button, FlatList, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type Mountain = {
@@ -13,6 +13,24 @@ export default function Index() {
   const [name, setName] = useState("");
   const [height, setHeight] = useState("");
   const [mountains, setMountains] = useState<Mountain[]>([]);
+
+  const addMountain = () => {
+    if (!name) return;
+    if (!height) return;
+    if (isNaN(Number(height))) return;
+
+    const newMountain: Mountain = {
+      id: Date.now().toString(),
+      name,
+      height,
+      date: new Date().toLocaleDateString(),
+    };
+
+    setMountains((prev) => [newMountain, ...prev]);
+
+    setName("");
+    setHeight("");
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#121212", padding: 20 }}>
@@ -33,7 +51,23 @@ export default function Index() {
         placeholderTextColor="gray"
       />
 
-      <Button title="保存" onPress={() => {}} />
+      <Button title="保存" onPress={addMountain} />
+
+      <FlatList
+        data={mountains}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View
+            style={{ padding: 10, borderBottomWidth: 1, borderColor: "gray" }}
+          >
+            <Text style={{ color: "white" }}>{item.date}</Text>
+            <Text style={{ color: "white" }}>{item.name}</Text>
+            <Text style={{ color: "white" }}>
+              {Number(item.height).toFixed(0)} m
+            </Text>
+          </View>
+        )}
+      />
     </SafeAreaView>
   );
 }
